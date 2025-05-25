@@ -125,7 +125,13 @@ app.post('/list',(req,res)=>{
             const writer = rows[0].writer
             console.log(title)
             console.log(content)
-            res.send(`<script>
+            res.send(
+                `<button onclick=back()>뒤로 가기</button>
+                <br>
+                <script>
+                function back(){
+                    location.href='/main'
+                }
                 document.writeln("제목:"+"${title}"+"<br>");
                 document.writeln("작성자:"+"${writer}"+"<br>")
                 document.writeln("내용:"+"${content}");
