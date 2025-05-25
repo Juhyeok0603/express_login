@@ -131,7 +131,7 @@ app.post('/list',(req,res)=>{
                 <script>
                 function back(){
                     location.href='/main'
-                }
+                };
                 document.writeln("제목:"+"${title}"+"<br>");
                 document.writeln("작성자:"+"${writer}"+"<br>")
                 document.writeln("내용:"+"${content}");
