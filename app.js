@@ -40,25 +40,22 @@ app.get('/', (req, res) => {
 })
 
 app.get('/main',(req,res)=>{
-    const cook = req.cookies.user;
-    console.log("--------")
-    console.log(cook)
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }
-    else if(!req.session.user){
-        res.send(`<script>
-            alert('세션이 없어요!.');
-            location.href='/'
-            </script>`)
-    }else{
-        console.log(req.session.user)
-        console.log("-------------")
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         res.sendFile(__dirname+'/page/main.html')
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
+    
 })
 
 app.get('/sign_up',(req,res)=>{
@@ -66,38 +63,33 @@ app.get('/sign_up',(req,res)=>{
 })
 
 app.get('/content',(req,res)=>{
-    const cook = req.cookies.user;
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }else if(!req.session.user){
-        res.send(`<script>
-            alert('로그인이 필요합니다.');
-            location.href='/'
-            </script>`)
-    }else{
-        console.log(req.session.user)
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         res.sendFile(__dirname+'/page/content.html')
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
+
+
 })
 
 app.post('/write',(req,res)=>{
-    const cook = req.cookies.user;
-    console.log(cook)
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }
-    else if(!req.session.user){
-        res.send(`<script>
-            alert('로그인이 필요합니다.');
-            location.href='/'
-            </script>`)
-    }else{
+
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         const content = req.body.content
         const writer = req.session.user
         const title = req.body.title
@@ -111,66 +103,63 @@ app.post('/write',(req,res)=>{
                 location.href='/main'
                 </script>`)
         })
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
 })
 
 
 
 app.get('/pyramid',(req,res)=>{
-    const cook = req.cookies.user;
-    console.log(cook)
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }
-    else if(!req.session.user){
-        res.send(`<script>
-            alert('로그인이 필요합니다.');
-            location.href='/'
-            </script>`)
-    }else{
-        console.log(req.session.user)
+
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         res.sendFile(__dirname+'/page/pyramid.html')
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
 })
 
 app.get('/pyramid_f',(req,res)=>{
-    const cook = req.cookies.user;
-    console.log(cook)
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }
-    else if(!req.session.user){
-        res.send(`<script>
-            alert('로그인이 필요합니다.');
-            location.href='/'
-            </script>`)
-    }else{
-        console.log(req.session.user)
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         res.sendFile(__dirname+'/page/pyramid_f.html')
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
 })
 
 app.post('/list',(req,res)=>{
-    const cook = req.cookies.user;
-    console.log(cook)
-    if(!cook){
-        res.send(`<script>
-            alert('쿠키가 없어요!.');
-            location.href='/'
-            </script>`)
-    }
-    else if(!req.session.user){
-        res.send(`<script>
-            alert('로그인이 필요합니다.');
-            location.href='/'
-            </script>`)
-    }else{
+
+    const cook = req.cookies.user
+    const sess = req.sessionID
+    if(cook == sess){
+        console.log(cook)
+        console.log(sess)
+        console.log("-일치-")
         const num = req.body.num
         console.log(num)
         connection.connect()
@@ -194,10 +183,15 @@ app.post('/list',(req,res)=>{
                 document.writeln("내용:"+"${content}");
                 </script>`) 
         })
-
-
-        
+    }else{
+        console.log("불일치")
+        res.send(`<script>
+            alert('로그인하고 오세요');
+            location.href='/'
+            </script>`)
     }
+    console.log("--------")
+
 })
 
 app.post('/sign_up', (req, res) => {
