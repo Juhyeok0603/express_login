@@ -3,7 +3,12 @@ const app = express()
 const port = 3000
 const bcrypt = require('bcrypt');
 
+const cookieParser = require('cookie-parser');
+
 const session = require('express-session')
+
+//get요청이 오면 uri변수들이 파싱되어 req.cookies 객체에 저장된다
+app.use(cookieParser())
 
 // Express 애플리케이션에서 JSON 형태의 요청(request) body를 파싱(parse)하기 위해 사용되는 미들웨어
 app.use(express.json())
@@ -32,9 +37,17 @@ app.get('/', (req, res) => {
 })
 
 app.get('/main',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    console.log(cook)
+    if(!cook){
         res.send(`<script>
-            alert('로그인이 필요합니다.');
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }
+    else if(!req.session.user){
+        res.send(`<script>
+            alert('세션이 없어요!.');
             location.href='/'
             </script>`)
     }else{
@@ -48,7 +61,13 @@ app.get('/sign_up',(req,res)=>{
 })
 
 app.get('/content',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    if(!cook){
+        res.send(`<script>
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }else if(!req.session.user){
         res.send(`<script>
             alert('로그인이 필요합니다.');
             location.href='/'
@@ -60,7 +79,15 @@ app.get('/content',(req,res)=>{
 })
 
 app.post('/write',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    console.log(cook)
+    if(!cook){
+        res.send(`<script>
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }
+    else if(!req.session.user){
         res.send(`<script>
             alert('로그인이 필요합니다.');
             location.href='/'
@@ -85,7 +112,15 @@ app.post('/write',(req,res)=>{
 
 
 app.get('/pyramid',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    console.log(cook)
+    if(!cook){
+        res.send(`<script>
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }
+    else if(!req.session.user){
         res.send(`<script>
             alert('로그인이 필요합니다.');
             location.href='/'
@@ -97,7 +132,15 @@ app.get('/pyramid',(req,res)=>{
 })
 
 app.get('/pyramid_f',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    console.log(cook)
+    if(!cook){
+        res.send(`<script>
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }
+    else if(!req.session.user){
         res.send(`<script>
             alert('로그인이 필요합니다.');
             location.href='/'
@@ -109,7 +152,15 @@ app.get('/pyramid_f',(req,res)=>{
 })
 
 app.post('/list',(req,res)=>{
-    if(!req.session.user){
+    const cook = req.cookies.user;
+    console.log(cook)
+    if(!cook){
+        res.send(`<script>
+            alert('쿠키가 없어요!.');
+            location.href='/'
+            </script>`)
+    }
+    else if(!req.session.user){
         res.send(`<script>
             alert('로그인이 필요합니다.');
             location.href='/'
@@ -193,7 +244,7 @@ app.post('/login',(req,res)=>{
             console.log('확인')
             //세션에 id추가
             req.session.user=id;
-            
+            res.cookie('user',id)
             res.send(`<script>
                 alert('로그인 성공!');
                 location.href='/main';
@@ -211,6 +262,7 @@ app.post('/login',(req,res)=>{
 
 app.post('/logout',(req,res)=>{
     req.session.destroy(()=>{
+        res.clearCookie('user')
         res.redirect('/')
     })
 })
