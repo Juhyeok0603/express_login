@@ -40,9 +40,12 @@ app.get('/', (req, res) => {
 })
 
 app.get('/main',(req,res)=>{
+    //브라우저에서 쿠키값 불러오기
     const cook = req.cookies.user
+    //sessionID 불러오기
     const sess = req.sessionID
     if(cook == sess){
+        //쿠키값이랑 sessionID랑 일치하면 페이지 띄워주기기
         console.log(cook)
         console.log(sess)
         console.log("-일치-")
@@ -247,6 +250,7 @@ app.post('/login',(req,res)=>{
             console.log(req.session.cookie)
             console.log(req.sessionID)
             const sess = req.sessionID
+            //sessionID를 쿠키값으로 추가
             res.cookie('user',sess)
     
             res.send(`<script>
