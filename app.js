@@ -45,7 +45,7 @@ app.get('/main',(req,res)=>{
     //sessionID 불러오기
     const sess = req.sessionID
     if(cook == sess){
-        //쿠키값이랑 sessionID랑 일치하면 페이지 띄워주기기
+        //쿠키값이랑 sessionID랑 일치하면 페이지 띄워주기
         console.log(cook)
         console.log(sess)
         console.log("-일치-")
