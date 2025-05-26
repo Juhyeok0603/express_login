@@ -17,8 +17,11 @@ app.use(express.urlencoded({extended:true}))
 
 
 app.use(session({
+     // [필수] SID를 생성할 때 사용되는 비밀키로 String or Array 사용 가능
     secret: 'mySecretKey123',
-    resave:false,
+    // true(default): 변경 사항이 없어도 세션을 다시 저장, false: 변경시에만 다시 저장
+    resave:false, 
+    // true: 어떠한 데이터도 추가되거나 변경되지 않은 세션 설정 허용, false: 비허용
     saveUninitialized: true
 }))
 
