@@ -41,6 +41,7 @@ app.get('/', (req, res) => {
 
 app.get('/main',(req,res)=>{
     const cook = req.cookies.user;
+    console.log("--------")
     console.log(cook)
     if(!cook){
         res.send(`<script>
@@ -55,6 +56,7 @@ app.get('/main',(req,res)=>{
             </script>`)
     }else{
         console.log(req.session.user)
+        console.log("-------------")
         res.sendFile(__dirname+'/page/main.html')
     }
 })
@@ -175,10 +177,11 @@ app.post('/list',(req,res)=>{
         connection.query(`SELECT * FROM hyeok.content WHERE idx='${num}'`,(err,rows,fields)=>{
             if(err) throw err;
             const title = rows[0].title
-            const content = rows[0].content
             const writer = rows[0].writer
+            const content = rows[0].content
             console.log(title)
             console.log(content)
+            console.log(writer)
             res.send(
                 `<button onclick=back()>뒤로 가기</button>
                 <br>
@@ -189,7 +192,7 @@ app.post('/list',(req,res)=>{
                 document.writeln("제목:"+"${title}"+"<br>");
                 document.writeln("작성자:"+"${writer}"+"<br>")
                 document.writeln("내용:"+"${content}");
-                </script>`)
+                </script>`) 
         })
 
 
@@ -247,7 +250,11 @@ app.post('/login',(req,res)=>{
             console.log('확인')
             //세션에 id추가
             req.session.user=id;
-            res.cookie('user',id)
+            console.log(req.session.cookie)
+            console.log(req.sessionID)
+            const sess = req.sessionID
+            res.cookie('user',sess)
+    
             res.send(`<script>
                 alert('로그인 성공!');
                 location.href='/main';
