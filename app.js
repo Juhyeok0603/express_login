@@ -42,8 +42,10 @@ app.get('/', (req, res) => {
 app.get('/main',(req,res)=>{
     //브라우저에서 쿠키값 불러오기
     const cook = req.cookies.user
+    console.log(cook)
     //sessionID 불러오기
     const sess = req.sessionID
+    console.log(sess)
     if(cook == sess){
         //쿠키값이랑 sessionID랑 일치하면 페이지 띄워주기
         console.log(cook)
@@ -63,6 +65,84 @@ app.get('/main',(req,res)=>{
 
 app.get('/sign_up',(req,res)=>{
     res.sendFile(__dirname+'/page/sign_up.html')
+})
+
+
+app.post('/sign_up', (req, res) => {
+    const id = req.body.id
+    const pw = req.body.pw
+
+    console.log(id)
+    console.log(pw)
+    
+    //salt 값이 높을수록 암호화 연산이 증가한다
+    const salt = 5
+    const hash = bcrypt.hashSync(pw,salt)
+    console.log(id)
+    console.log(hash);
+
+    connection.connect()
+    connection.query(`SELECT * FROM hyeok.id_table WHERE id = '${id}';`,(err,rows,fields)=>{
+        if(rows != ''){
+            res.send(`<script>
+                alert("중복된 아이디입니다");
+                location.href="/sign_up"
+                </script>`)
+        }else{
+            connection.query(`INSERT INTO hyeok.id_table(id,pw) VALUE('${id}','${hash}');`,(err,rows,fields)=>{
+        if(err) throw err;
+        console.log(rows)
+        res.send(`<script>
+            alert("회원가입 성공!");
+            location.href="/"
+            </script>`)
+    })
+        }
+    })
+})
+
+
+app.post('/login',(req,res)=>{
+    const id = req.body.id
+    const pw = req.body.pw
+    
+
+    connection.connect()
+    connection.query(`SELECT pw FROM hyeok.id_table WHERE id = '${id}'`,(err,rows,fields)=>{
+        if(err) throw err;
+        const db_pw = rows[0].pw
+        console.log(db_pw)
+        const check = bcrypt.compareSync(pw,db_pw)
+        if(check){
+            console.log('확인')
+            // 세션에 id추가
+            req.session.user=id;
+            console.log(req.session.cookie)
+            console.log(req.sessionID)
+            const sess = req.sessionID
+            // sessionID를 쿠키값으로 추가
+            res.cookie('user',sess)
+    
+            res.send(`<script>
+                alert('로그인 성공!');
+                location.href='/main';
+                </script>`)
+        }else{
+            console.log('x')
+            res.send(`<script>
+                alert('로그인 실패!');
+                location.href='/';
+                </script>`)
+        }
+    })
+})
+
+
+app.post('/logout',(req,res)=>{
+    req.session.destroy(()=>{
+        res.clearCookie('user')
+        res.redirect('/')
+    })
 })
 
 app.get('/content',(req,res)=>{
@@ -197,83 +277,6 @@ app.post('/list',(req,res)=>{
 
 })
 
-app.post('/sign_up', (req, res) => {
-    const id = req.body.id
-    const pw = req.body.pw
-
-    console.log(id)
-    console.log(pw)
-    
-    //salt 값이 높을수록 암호화 연산이 증가한다
-    const salt = 5
-    const hash = bcrypt.hashSync(pw,salt)
-    console.log(id)
-    console.log(hash);
-
-    connection.connect()
-    connection.query(`SELECT * FROM hyeok.id_table WHERE id = '${id}';`,(err,rows,fields)=>{
-        if(rows != ''){
-            res.send(`<script>
-                alert("중복된 아이디입니다");
-                location.href="/sign_up"
-                </script>`)
-        }else{
-            connection.query(`INSERT INTO hyeok.id_table(id,pw) VALUE('${id}','${hash}');`,(err,rows,fields)=>{
-        if(err) throw err;
-        console.log(rows)
-        res.send(`<script>
-            alert("회원가입 성공!");
-            location.href="/"
-            </script>`)
-    })
-        }
-    })
-})
-
-
-
-app.post('/login',(req,res)=>{
-    const id = req.body.id
-    const pw = req.body.pw
-    
-
-    connection.connect()
-    connection.query(`SELECT pw FROM hyeok.id_table WHERE id = '${id}'`,(err,rows,fields)=>{
-        if(err) throw err;
-        const db_pw = rows[0].pw
-        console.log(db_pw)
-        const check = bcrypt.compareSync(pw,db_pw)
-        if(check){
-            console.log('확인')
-            //세션에 id추가
-            req.session.user=id;
-            console.log(req.session.cookie)
-            console.log(req.sessionID)
-            const sess = req.sessionID
-            //sessionID를 쿠키값으로 추가
-            res.cookie('user',sess)
-    
-            res.send(`<script>
-                alert('로그인 성공!');
-                location.href='/main';
-                </script>`)
-        }else{
-            console.log('x')
-            res.send(`<script>
-                alert('로그인 실패!');
-                location.href='/';
-                </script>`)
-        }
-    })
-})
-
-
-app.post('/logout',(req,res)=>{
-    req.session.destroy(()=>{
-        res.clearCookie('user')
-        res.redirect('/')
-    })
-})
 
 
 app.listen(port, () => {
