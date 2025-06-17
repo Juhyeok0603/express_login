@@ -3,6 +3,7 @@ const app = express()
 const port = 3000
 const bcrypt = require('bcrypt');
 
+
 const cookieParser = require('cookie-parser');
 
 const session = require('express-session')
@@ -18,20 +19,22 @@ app.use(express.urlencoded({extended:true}))
 
 app.use(session({
      // [필수] SID를 생성할 때 사용되는 비밀키로 String or Array 사용 가능
-    secret: 'mySecretKey123',
+    secret: process.env.SESSION_SECRET,
     // true(default): 변경 사항이 없어도 세션을 다시 저장, false: 변경시에만 다시 저장
     resave:false, 
     // true: 어떠한 데이터도 추가되거나 변경되지 않은 세션 설정 허용, false: 비허용
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie:{secure:false},
 }))
 
 
-
-var mysql      = require('mysql2');
-var connection = mysql.createConnection({
-    host     : 'localhost',
-    user     : 'root',
-    password : '1234'
+require('dotenv').config()
+const mysql      = require('mysql2/promise');
+const connection = mysql.createPool({
+    host     : process.env.DB_HOST,
+    user     : process.env.DB_USER,
+    password : process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
 });
 
 
