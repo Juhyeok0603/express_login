@@ -1,20 +1,20 @@
-const express = require('express')
-const app = express()
-const port = 3000
+const express = require('express');
+const app = express();
+const port = 3000;
 const bcrypt = require('bcrypt');
 
 
 const cookieParser = require('cookie-parser');
 
-const session = require('express-session')
+const session = require('express-session');
 
 //get요청이 오면 uri변수들이 파싱되어 req.cookies 객체에 저장된다
-app.use(cookieParser())
+app.use(cookieParser());
 
 // Express 애플리케이션에서 JSON 형태의 요청(request) body를 파싱(parse)하기 위해 사용되는 미들웨어
-app.use(express.json())
+app.use(express.json());
 //HTTP POST 요청의 본문(body)에 인코딩된 데이터를 해석하고, req.body 객체에 채워넣어주는 역할을 합니다.
-app.use(express.urlencoded({extended:true}))
+app.use(express.urlencoded({extended:true}));
 
 
 app.use(session({
@@ -28,7 +28,7 @@ app.use(session({
 }))
 
 
-require('dotenv').config()
+require('dotenv').config();
 const mysql      = require('mysql2/promise');
 const connection = mysql.createPool({
     host     : process.env.DB_HOST,
