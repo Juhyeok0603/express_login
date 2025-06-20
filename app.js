@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const cookieParser = require('cookie-parser');
 
 const session = require('express-session');
+require('dotenv').config();
 
 //get요청이 오면 uri변수들이 파싱되어 req.cookies 객체에 저장된다
 app.use(cookieParser());
